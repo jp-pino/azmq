@@ -9,6 +9,7 @@
 #include <azmq/socket.hpp>
 #include <azmq/util/scope_guard.hpp>
 
+#include <boost/current_function.hpp>
 #include <boost/utility/string_ref.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
@@ -894,4 +895,3 @@ TEST_CASE("Async Operation Send/Receive single message, stackful coroutine, one 
 }
 
 #endif // BOOST_VERSION >= 107000
-

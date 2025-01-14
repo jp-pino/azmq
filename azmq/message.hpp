@@ -76,7 +76,7 @@ AZMQ_V1_INLINE_NAMESPACE_BEGIN
         message(nocopy_t, boost::asio::const_buffer const& buffer)
             : message(nocopy,
                 boost::asio::mutable_buffer(
-                    (void *)boost::asio::buffer_cast<const void*>(buffer),
+                    const_cast<void*>(buffer.data()),
                     boost::asio::buffer_size(buffer)),
                 nullptr,
                 nullptr)
@@ -85,7 +85,7 @@ AZMQ_V1_INLINE_NAMESPACE_BEGIN
         message(nocopy_t, boost::asio::mutable_buffer const& buffer, void* hint, zmq_free_fn* deleter)
         {
             auto rc = zmq_msg_init_data(&msg_,
-                                        boost::asio::buffer_cast<void*>(buffer),
+                                        buffer.data(),
                                         boost::asio::buffer_size(buffer),
                                         deleter, hint);
             if (rc)
@@ -107,7 +107,7 @@ AZMQ_V1_INLINE_NAMESPACE_BEGIN
 
             std::unique_ptr<D> d(new D(std::forward<Deleter>(deleter)));
             auto rc = zmq_msg_init_data(&msg_,
-                                        boost::asio::buffer_cast<void*>(buffer),
+                                        buffer.data(),
                                         boost::asio::buffer_size(buffer),
                                         call_deleter, d.get());
             if (rc)
@@ -125,7 +125,7 @@ AZMQ_V1_INLINE_NAMESPACE_BEGIN
             };
 
             auto rc = zmq_msg_init_data(&msg_,
-                                        boost::asio::buffer_cast<void*>(buffer),
+                                        buffer.data(),
                                         boost::asio::buffer_size(buffer),
                                         call_deleter, reinterpret_cast<void *>(deleter));
             if (rc)
@@ -193,7 +193,7 @@ AZMQ_V1_INLINE_NAMESPACE_BEGIN
 
         template<typename T>
         T const& buffer_cast() const {
-            return *boost::asio::buffer_cast<T const*>(buffer());
+            return *static_cast<T const*>(buffer().data());
         }
 
         size_t buffer_copy(boost::asio::mutable_buffer const& target) const {

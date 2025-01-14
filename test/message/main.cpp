@@ -166,7 +166,7 @@ TEST_CASE( "write_through_mutable_buffer", "[message]" ) {
 
     azmq::message mm(m);
     boost::asio::mutable_buffer bb = mm.buffer();
-    auto pstr = boost::asio::buffer_cast<char*>(bb);
+    auto pstr = static_cast<char*>(bb.data());
     pstr[0] = 't';
 
     auto s = mm.string();

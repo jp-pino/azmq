@@ -12,8 +12,7 @@
 #include "detail/socket_service.hpp"
 #include "option.hpp"
 #include "error.hpp"
-
-#include <boost/asio/io_service.hpp>
+#include "io_service.hpp"
 #include <zmq.h>
 
 namespace azmq {

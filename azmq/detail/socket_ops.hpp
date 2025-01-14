@@ -10,12 +10,12 @@
 #define AZMQ_DETAIL_SOCKET_OPS_HPP__
 
 #include "../error.hpp"
+#include "../io_service.hpp"
 #include "../message.hpp"
 #include "context_ops.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/asio/io_service.hpp>
 #include <boost/asio/socket_base.hpp>
 #if ! defined BOOST_ASIO_WINDOWS
     #include <boost/asio/posix/stream_descriptor.hpp>
@@ -265,16 +265,15 @@ namespace detail {
         }
 
         template<typename ConstBufferSequence>
-        static auto send(ConstBufferSequence const& buffers,
+        static size_t send(ConstBufferSequence const& buffers,
                          socket_type & socket,
                          flags_type flags,
-                         boost::system::error_code & ec) ->
-            typename boost::enable_if<boost::has_range_const_iterator<ConstBufferSequence>, size_t>::type
+                         boost::system::error_code & ec) 
         {
             size_t res = 0;
-            auto last = std::distance(std::begin(buffers), std::end(buffers)) - 1;
+            auto last = std::distance(boost::asio::buffer_sequence_begin(buffers), boost::asio::buffer_sequence_end(buffers)) - 1;
             decltype(last) index = 0u;
-            for (auto it = std::begin(buffers); it != std::end(buffers); ++it, ++index) {
+            for (auto it = boost::asio::buffer_sequence_begin(buffers); it != boost::asio::buffer_sequence_end(buffers); ++it, ++index) {
                 auto f = index == last ? flags
                                        : flags | ZMQ_SNDMORE;
                 res += send(message(*it), socket, f, ec);
@@ -297,15 +296,14 @@ namespace detail {
         }
 
         template<typename MutableBufferSequence>
-        static auto receive(MutableBufferSequence const& buffers,
+        static size_t receive(MutableBufferSequence const& buffers,
                             socket_type & socket,
                             flags_type flags,
-                            boost::system::error_code & ec) ->
-            typename boost::enable_if<boost::has_range_const_iterator<MutableBufferSequence>, size_t>::type
+                            boost::system::error_code & ec) 
         {
             size_t res = 0;
             message msg;
-            auto it = std::begin(buffers);
+            auto it = boost::asio::buffer_sequence_begin(buffers);
             do {
                 auto sz = receive(msg, socket, flags, ec);
                 if (ec)
@@ -318,7 +316,7 @@ namespace detail {
 
                 res += sz;
                 flags |= ZMQ_RCVMORE;
-            } while ((it != std::end(buffers)) && msg.more());
+            } while ((it != boost::asio::buffer_sequence_end(buffers)) && msg.more());
 
             if (msg.more())
                 ec = make_error_code(boost::system::errc::no_buffer_space);
@@ -373,4 +371,3 @@ namespace detail {
 } // namespace detail
 } // namespace azmq
 #endif // AZMQ_DETAIL_SOCKET_OPS_HPP__
-

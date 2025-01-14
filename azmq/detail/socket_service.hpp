@@ -202,7 +202,7 @@ namespace detail {
             , ctx_(context_ops::get_context())
         { }
 
-        void shutdown_service() override {
+        void shutdown() override {
             ctx_.reset();
         }
 
@@ -689,11 +689,10 @@ namespace detail {
                         impl->in_speculative_completion_ = true;
                         l.unlock();
 #ifdef AZMQ_DETAIL_USE_IO_SERVICE			
-                        get_io_service()
+                        get_io_service().post(deferred_completion(impl, std::move(op)));
 #else
-                        get_io_context()
+                        boost::asio::post(get_io_context(), deferred_completion(impl, std::move(op)));
 #endif
-                            .post(deferred_completion(impl, std::move(op)));
                         return;
                     }
                 }
@@ -725,4 +724,3 @@ namespace detail {
 } // namespace detail
 } // namespace azmq
 #endif // AZMQ_DETAIL_SOCKET_SERVICE_HPP__
-

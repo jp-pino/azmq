@@ -9,7 +9,10 @@
 #include <azmq/actor.hpp>
 #include <azmq/util/scope_guard.hpp>
 
+
+#include <boost/asio/executor_work_guard.hpp>
 #include <boost/asio/buffer.hpp>
+#include <boost/asio/io_context.hpp>
 
 #include <array>
 #include <thread>
@@ -42,12 +45,12 @@ TEST_CASE( "Async Send/Receive", "[actor]" ) {
             boost::asio::buffer(b)
         }};
 
-        boost::asio::io_service ios;
-        auto s = azmq::actor::spawn(ios, [&](azmq::socket & ss) {
+        boost::asio::io_context io;
+        auto s = azmq::actor::spawn(io, [&](azmq::socket & ss) {
             ss.async_receive(rcv_bufs, [&](boost::system::error_code const& ec, size_t bytes_transferred) {
                 ecb = ec;
                 btb = bytes_transferred;
-                ios.stop();
+                io.stop();
             });
             ss.get_io_service().run();
         });
@@ -57,8 +60,8 @@ TEST_CASE( "Async Send/Receive", "[actor]" ) {
             btc = bytes_transferred;
         });
 
-        boost::asio::io_service::work w(ios);
-        ios.run();
+        auto work = boost::asio::make_work_guard(io);
+        io.run();
     }
 
     REQUIRE(ecc == boost::system::error_code());

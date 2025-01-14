@@ -9,11 +9,10 @@
 #ifndef AZMQ_DETAIL_SEND_OP_HPP_
 #define AZMQ_DETAIL_SEND_OP_HPP_
 #include "../error.hpp"
+#include "../io_service.hpp"
 #include "../message.hpp"
 #include "socket_ops.hpp"
 #include "reactor_op.hpp"
-
-#include <boost/asio/io_service.hpp>
 
 #include <zmq.h>
 #include <iterator>
@@ -103,5 +102,3 @@ private:
 } // namespace detail
 } // namespace azmq
 #endif // AZMQ_DETAIL_SEND_OP_HPP_
-
-

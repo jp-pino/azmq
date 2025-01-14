@@ -9,7 +9,7 @@
 #ifndef AZMQ_DETAIL_SERVICE_BASE_HPP_
 #define AZMQ_DETAIL_SERVICE_BASE_HPP_
 
-#include <boost/asio/io_service.hpp>
+#include "../io_service.hpp"
 
 namespace azmq {
 namespace detail {
@@ -35,4 +35,3 @@ namespace detail {
 } // namespace detail
 } // namespace azmq
 #endif // AZMQ_DETAIL_SERVICE_BASE_HPP_
-

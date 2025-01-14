@@ -9,9 +9,9 @@
 #ifndef AZMQ_DETAIL_SOCKET_EXT_HPP__
 #define AZMQ_DETAIL_SOCKET_EXT_HPP__
 #include "../error.hpp"
+#include "../io_service.hpp"
 
 #include <boost/assert.hpp>
-#include <boost/asio/io_service.hpp>
 
 #include <memory>
 #include <typeindex>
@@ -110,4 +110,3 @@ namespace detail {
 } // namespace detail
 } // namespace azmq
 #endif // AZMQ_DETAIL_SOCKET_EXT_HPP__
-
