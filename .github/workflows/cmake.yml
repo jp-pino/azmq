@@ -32,6 +32,33 @@ jobs:
             cxx: "g++",
           }
           - {
+            name: "macos15 ",
+            os: macos-15,
+            boost_url: system,
+            zmq_tag: system,
+            system_packages: "zmq boost",
+            cc: "clang",
+            cxx: "clang++",
+          }
+          - {
+            name: "macos14 ",
+            os: macos-14,
+            boost_url: system,
+            zmq_tag: system,
+            system_packages: "zmq boost",
+            cc: "clang",
+            cxx: "clang++",
+          }
+          - {
+            name: "macos13 ",
+            os: macos-13,
+            boost_url: system,
+            zmq_tag: system,
+            system_packages: "zmq boost",
+            cc: "clang",
+            cxx: "clang++",
+          }
+          - {
             name: "macos12 ",
             os: macos-12,
             boost_url: system,
