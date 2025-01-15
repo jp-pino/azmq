@@ -14,6 +14,15 @@ jobs:
       matrix:
         config:
           - {
+            name: "ubuntu24",
+            os: ubuntu-24.04,
+            boost_url: system,
+            zmq_tag: system,
+            system_packages: "libboost-all-dev libzmq3-dev ",
+            cc: "gcc",
+            cxx: "g++",
+          }
+          - {
             name: "ubuntu22",
             os: ubuntu-22.04,
             boost_url: system,
