@@ -23,12 +23,15 @@ endif ()
 
 include(ExternalProject)
 
-set(BOOST_177 "https://boostorg.jfrog.io/artifactory/main/release/1.77.0/source/boost_1_77_0.tar.bz2")
-set(BOOST_176 "https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.bz2")
-set(BOOST_174 "https://boostorg.jfrog.io/artifactory/main/release/1.74.0/source/boost_1_74_0.tar.bz2")
-set(BOOST_172 "https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.bz2")
-set(BOOST_170 "https://boostorg.jfrog.io/artifactory/main/release/1.70.0/source/boost_1_70_0.tar.bz2")
-set(BOOST_168 "https://boostorg.jfrog.io/artifactory/main/release/1.68.0/source/boost_1_68_0.tar.bz2")
+set(BOOST_187 "https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2")
+set(BOOST_186 "https://archives.boost.io/release/1.86.0/source/boost_1_86_0.tar.bz2")
+set(BOOST_184 "https://archives.boost.io/release/1.84.0/source/boost_1_84_0.tar.bz2")
+set(BOOST_177 "https://archives.boost.io/release/1.77.0/source/boost_1_77_0.tar.bz2")
+set(BOOST_176 "https://archives.boost.io/release/1.76.0/source/boost_1_76_0.tar.bz2")
+set(BOOST_174 "https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.bz2")
+set(BOOST_172 "https://archives.boost.io/release/1.72.0/source/boost_1_72_0.tar.bz2")
+set(BOOST_170 "https://archives.boost.io/release/1.70.0/source/boost_1_70_0.tar.bz2")
+set(BOOST_168 "https://archives.boost.io/release/1.68.0/source/boost_1_68_0.tar.bz2")
 
 set(DEVROOT ${CMAKE_BINARY_DIR}/devroot)
 
