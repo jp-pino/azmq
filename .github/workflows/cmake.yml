@@ -7,6 +7,10 @@ on:
   pull_request:
     branches: [master]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     strategy:
@@ -70,6 +74,7 @@ jobs:
           if [[ 
             (${{matrix.config.os}} == "ubuntu-22.04" && ${{matrix.boost.url}} == "BOOST_170") 
             || (${{matrix.config.os}} == "ubuntu-24.04" && ${{matrix.boost.url}} == "BOOST_170") 
+            || (${{matrix.config.os}} == "macos-15" && ${{matrix.boost.url}} == "BOOST_170")
           ]]; then
             echo "### Skipping invalid config :no_entry_sign:" >> $GITHUB_STEP_SUMMARY
             echo "The OS/Boost combination might not be compatible" >> $GITHUB_STEP_SUMMARY
