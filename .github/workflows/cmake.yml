@@ -42,6 +42,9 @@ jobs:
           - url: BOOST_184
             system_packages_ubuntu: 
             system_packages_macos:
+          - url: BOOST_176
+            system_packages_ubuntu: 
+            system_packages_macos:
           - url: BOOST_174
             system_packages_ubuntu: 
             system_packages_macos:
@@ -69,6 +72,22 @@ jobs:
               os: macos-13
             boost:
               url: BOOST_170
+          - config:
+              os: macos-14
+            boost:
+              url: BOOST_174
+          - config:
+              os: macos-15
+            boost:
+              url: BOOST_174
+          - config:
+              os: macos-13
+            boost:
+              url: BOOST_174
+          - config:
+              os: macos-14
+            boost:
+              url: BOOST_174
 
     runs-on: ${{ matrix.config.os }}
 
