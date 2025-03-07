@@ -41,6 +41,9 @@ jobs:
           - url: BOOST_184
             system_packages_ubuntu: 
             system_packages_macos:
+          - url: BOOST_174
+            system_packages_ubuntu: 
+            system_packages_macos:
           - url: BOOST_170
             system_packages_ubuntu: 
             system_packages_macos:
@@ -61,6 +64,16 @@ jobs:
       MATRIX: ${{ toJson(matrix) }}
 
     steps:
+      - name: Exclude invalid configs
+        run: |
+          if [[ 
+            (${{matrix.config.os}} == "ubuntu-22.04" && ${{matrix.boost.url}} == "BOOST_170") 
+            || (${{matrix.config.os}} == "ubuntu-24.04" && ${{matrix.boost.url}} == "BOOST_170") 
+          ]]; then
+            echo "### Skipping invalid config :no_entry_sign:" >> $GITHUB_STEP_SUMMARY
+            echo "The OS/Boost combination might not be compatible" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
       - uses: actions/checkout@v3
       - name: buildtools on ubuntu
         if: startsWith(matrix.config.os, 'ubuntu')

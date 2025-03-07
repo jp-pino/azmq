@@ -10,7 +10,6 @@ else()
     message(WARNING "${PROJECT_NAME} requires ${REQUIRES_MSG}")
     return()
 endif ()
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcoroutines")
 
 set(REQUIRES_MSG "a c++20 compiler")
 if (cxx_std_20 IN_LIST CMAKE_CXX_COMPILE_FEATURES)
@@ -28,6 +27,7 @@ else()
     return()
 endif ()
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcoroutines")
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME}
         Azmq::azmq
