@@ -55,6 +55,15 @@ jobs:
           - tag: system
             system_packages_ubuntu: libzmq3-dev
             system_packages_macos: zmq
+        exclude:
+          - config.os: ubuntu-22.04
+            boost.url: BOOST_170
+          - config.os: ubuntu-24.04
+            boost.url: BOOST_170
+          - config.os: macos-15
+            boost.url: BOOST_170
+          - config.os: macos-13
+            boost.url: BOOST_170
 
     runs-on: ${{ matrix.config.os }}
 
