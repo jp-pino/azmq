@@ -82,7 +82,7 @@ jobs:
           fi
       - uses: actions/checkout@v3
       - name: buildtools on ubuntu
-        if: startsWith(matrix.config.os, 'ubuntu') && ${{ !env.skip }}
+        if: ${{ startsWith(matrix.config.os, 'ubuntu') && !env.skip }}
         shell: bash
         run: |
           PACKAGES_UBUNTU=$(echo $PACKAGES_UBUNTU | sed 's/^[   ]*//;s/[    ]*$//')
@@ -90,7 +90,7 @@ jobs:
             sudo apt-get update && sudo apt-get install -y $PACKAGES_UBUNTU
           fi
       - name: buildtools on macos
-        if: startsWith(matrix.config.os, 'macos') && ${{ !env.skip }}
+        if: ${{ startsWith(matrix.config.os, 'macos') && !env.skip }}
         shell: bash
         run: |
           PACKAGES_MACOS=$(echo $PACKAGES_MACOS | sed 's/^[   ]*//;s/[    ]*$//')
