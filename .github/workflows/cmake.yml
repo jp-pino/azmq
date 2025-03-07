@@ -51,6 +51,9 @@ jobs:
           - url: BOOST_170
             system_packages_ubuntu: 
             system_packages_macos:
+          - url: BOOST_168
+            system_packages_ubuntu: 
+            system_packages_macos:
         zmq: 
           - tag: system
             system_packages_ubuntu: libzmq3-dev
@@ -69,23 +72,23 @@ jobs:
             boost:
               url: BOOST_170
           - config:
-              os: macos-13
+              os: macos-14
             boost:
               url: BOOST_170
           - config:
-              os: macos-14
+              os: macos-13
             boost:
-              url: BOOST_174
+              url: BOOST_170
           - config:
               os: macos-15
             boost:
               url: BOOST_174
           - config:
-              os: macos-13
+              os: macos-14
             boost:
               url: BOOST_174
           - config:
-              os: macos-14
+              os: macos-13
             boost:
               url: BOOST_174
 
