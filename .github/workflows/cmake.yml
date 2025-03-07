@@ -75,6 +75,7 @@ jobs:
             (${{matrix.config.os}} == "ubuntu-22.04" && ${{matrix.boost.url}} == "BOOST_170") 
             || (${{matrix.config.os}} == "ubuntu-24.04" && ${{matrix.boost.url}} == "BOOST_170") 
             || (${{matrix.config.os}} == "macos-15" && ${{matrix.boost.url}} == "BOOST_170")
+            || (${{matrix.config.os}} == "macos-13" && ${{matrix.boost.url}} == "BOOST_170")
           ]]; then
             echo "### Skipping invalid config :no_entry_sign:" >> $GITHUB_STEP_SUMMARY
             echo "The OS/Boost combination might not be compatible" >> $GITHUB_STEP_SUMMARY
