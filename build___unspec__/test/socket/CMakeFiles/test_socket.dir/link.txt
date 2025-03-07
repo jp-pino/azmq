@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/test_socket.dir/main.cpp.o -o test_socket  -Wl,-rpath,/usr/local/lib /usr/local/lib/libboost_coroutine.so.1.86.0 /usr/lib/aarch64-linux-gnu/libzmq.so /usr/local/lib/libboost_context.so.1.86.0

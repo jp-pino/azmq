@@ -820,6 +820,7 @@ TEST_CASE("Async Operation Send/Receive with future ", "[socket_ops]") {
     REQUIRE(btb.get() == 9);
 }
 
+// If boost >= 1.80 use completion token boost::asio::use_future
 TEST_CASE("Async Operation Send/Receive with stackful coroutine", "[socket_ops]") {
     boost::asio::io_service ios;
 
@@ -835,7 +836,11 @@ TEST_CASE("Async Operation Send/Receive with stackful coroutine", "[socket_ops]"
     //send coroutine task
     boost::asio::spawn(ios, [&](boost::asio::yield_context yield) {
       btc = azmq::async_send(sc, snd_bufs, yield);
-    }, boost::asio::use_future);
+    }
+    #if BOOST_VERSION >= 108000
+    , boost::asio::use_future
+    #endif
+    );
 
     //receive coroutine task
     boost::asio::spawn(ios, [&](boost::asio::yield_context yield) {
@@ -850,7 +855,11 @@ TEST_CASE("Async Operation Send/Receive with stackful coroutine", "[socket_ops]"
                                                              }};
 
       btb = azmq::async_receive(sb, rcv_bufs, yield);
-    }, boost::asio::use_future);
+    }
+    #if BOOST_VERSION >= 108000
+    , boost::asio::use_future
+    #endif
+    );
 
     ios.run();
 
@@ -862,6 +871,7 @@ TEST_CASE("Async Operation Send/Receive with stackful coroutine", "[socket_ops]"
 
 }
 
+// If boost >= 1.80 use completion token boost::asio::use_future
 TEST_CASE("Async Operation Send/Receive single message, stackful coroutine, one message at a time", "[socket_ops]") {
     boost::asio::io_service ios;
 
@@ -875,7 +885,11 @@ TEST_CASE("Async Operation Send/Receive single message, stackful coroutine, one 
     boost::asio::spawn(ios, [&](boost::asio::yield_context yield) {
       auto const btc = azmq::async_send(sc, snd_bufs, yield);
       REQUIRE(btc == 4);
-    }, boost::asio::use_future);
+    }
+    #if BOOST_VERSION >= 108000
+    , boost::asio::use_future
+    #endif
+    );
 
     //receive coroutine task
     boost::asio::spawn(ios, [&](boost::asio::yield_context yield) {
@@ -890,8 +904,11 @@ TEST_CASE("Async Operation Send/Receive single message, stackful coroutine, one 
       auto frame3 = azmq::message{};
       auto const btb3 = azmq::async_receive(sb, frame3, yield);
       REQUIRE(btb3 == 2);
-
-    }, boost::asio::use_future);
+    }
+    #if BOOST_VERSION >= 108000
+    , boost::asio::use_future
+    #endif
+    );
 
     ios.run();
 }

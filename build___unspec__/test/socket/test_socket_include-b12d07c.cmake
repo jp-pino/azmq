@@ -1,0 +1,5 @@
+if(EXISTS "/workspaces/blunux-repos/azmq/build___unspec__/test/socket/test_socket_tests-b12d07c.cmake")
+  include("/workspaces/blunux-repos/azmq/build___unspec__/test/socket/test_socket_tests-b12d07c.cmake")
+else()
+  add_test(test_socket_NOT_BUILT-b12d07c test_socket_NOT_BUILT-b12d07c)
+endif()
