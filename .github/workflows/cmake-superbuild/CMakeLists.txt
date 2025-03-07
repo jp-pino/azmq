@@ -79,7 +79,7 @@ if (NOT (BOOST_URL STREQUAL "system"))
         INSTALL_DIR ${DEVROOT}
         CONFIGURE_COMMAND ./bootstrap.sh --prefix=<INSTALL_DIR>
         BUILD_COMMAND ""
-        INSTALL_COMMAND ./b2 install --prefix=<INSTALL_DIR> -j${CPU_COUNT})
+        INSTALL_COMMAND ./b2 install --prefix=<INSTALL_DIR> -j${CPU_COUNT} --warnings-as-errors=off)
     list(APPEND LIBS boost)
 endif ()
 
