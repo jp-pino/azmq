@@ -14,6 +14,8 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/asio/buffer.hpp>
+#include <boost/version.hpp>
+
 
 #if BOOST_VERSION >= 107000
 #include <boost/asio/use_future.hpp>
