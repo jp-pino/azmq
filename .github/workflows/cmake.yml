@@ -68,7 +68,7 @@ jobs:
         run: |
           PACKAGES_UBUNTU=$(echo $PACKAGES_UBUNTU | sed 's/^[   ]*//;s/[    ]*$//')
           if [ -n "$PACKAGES_UBUNTU" ]; then
-            sudo apt-get install -y $PACKAGES_UBUNTU
+            sudo apt-get update && sudo apt-get install -y $PACKAGES_UBUNTU
           fi
       - name: buildtools on macos
         if: startsWith(matrix.config.os, 'macos')
