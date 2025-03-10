@@ -37,7 +37,7 @@ find_package(Threads REQUIRED)
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(Azmq::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} INTERFACE Azmq::libzmq Boost::boost ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${PROJECT_NAME} INTERFACE Azmq::libzmq Boost::boost Boost::system ${CMAKE_THREAD_LIBS_INIT})
 target_include_directories(${PROJECT_NAME} INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
                                                      "$<INSTALL_INTERFACE:include>")
 
