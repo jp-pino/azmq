@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.16.3...3.25)
-# -- v3.16.3 is the default version in the current ubuntu lts release
+cmake_minimum_required(VERSION 3.22.1...3.25)
+# -- v3.22.1 is the default version in the current ubuntu lts release
 
 project(azmq VERSION 1.1.0 LANGUAGES CXX)
 
