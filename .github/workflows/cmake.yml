@@ -72,39 +72,6 @@ jobs:
           - tag: system
             system_packages_ubuntu: libzmq3-dev
             system_packages_macos: zmq
-        exclude:
-          - config:
-              os: ubuntu-22.04
-            boost:
-              url: BOOST_170
-          - config:
-              os: ubuntu-24.04
-            boost:
-              url: BOOST_170
-          - config:
-              os: macos-15
-            boost:
-              url: BOOST_170
-          - config:
-              os: macos-14
-            boost:
-              url: BOOST_170
-          - config:
-              os: macos-13
-            boost:
-              url: BOOST_170
-          - config:
-              os: macos-15
-            boost:
-              url: BOOST_174
-          - config:
-              os: macos-14
-            boost:
-              url: BOOST_174
-          - config:
-              os: macos-13
-            boost:
-              url: BOOST_174
 
     runs-on: ${{ matrix.config.os }}
 
@@ -118,6 +85,25 @@ jobs:
       MATRIX: ${{ toJson(matrix) }}
 
     steps:
+      - name: Install clang++ wrapper
+        if: ${{ startsWith(matrix.config.os, 'ubuntu') && (endsWith(matrix.boost.url, 'BOOST_168') || endsWith(matrix.boost.url, 'BOOST_176')) }}
+        run: |
+          sudo tee /usr/local/bin/clang++-wrapper > /dev/null << 'EOF'
+          #!/usr/bin/env bash
+          REAL_CLANG=$(which clang++)
+          ARGS=()
+          for arg in "$@"; do
+              if [[ "$arg" != "-fcoalesce-templates" ]]; then
+                  ARGS+=("$arg")
+              fi
+          done
+          exec "$REAL_CLANG" "${ARGS[@]}"
+          EOF
+          sudo chmod +x /usr/local/bin/clang++-wrapper
+
+          # Override clang++ globally for this workflow
+          sudo ln -sf /usr/local/bin/clang++-wrapper /usr/local/bin/clang++
+          clang++ --version  # verify
       - uses: actions/checkout@v3
       - name: buildtools on ubuntu
         if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
