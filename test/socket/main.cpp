@@ -839,6 +839,9 @@ TEST_CASE("Async Operation Send/Receive with stackful coroutine", "[socket_ops]"
     boost::optional<size_t> btb{};
 
     //send coroutine task
+    # if BOOST_VERSION >= 108000
+    auto future_send =
+    # endif
     boost::asio::spawn(ios, [&](boost::asio::yield_context yield) {
       btc = azmq::async_send(sc, snd_bufs, yield);
     }
@@ -848,6 +851,9 @@ TEST_CASE("Async Operation Send/Receive with stackful coroutine", "[socket_ops]"
     );
 
     //receive coroutine task
+    # if BOOST_VERSION >= 108000
+    auto future_recv =
+    # endif
     boost::asio::spawn(ios, [&](boost::asio::yield_context yield) {
       std::array<char, 5> ident;
       std::array<char, 2> a;
@@ -867,6 +873,12 @@ TEST_CASE("Async Operation Send/Receive with stackful coroutine", "[socket_ops]"
     );
 
     ios.run();
+    
+    // Make sure coroutines have executed
+    # if BOOST_VERSION >= 108000
+    REQUIRE(future_send.wait_for(std::chrono::seconds(1)) == std::future_status::ready);
+    REQUIRE(future_recv.wait_for(std::chrono::seconds(1)) == std::future_status::ready);
+    # endif
 
     REQUIRE(btc.has_value());
     REQUIRE(btc.value() == 4);
@@ -887,6 +899,9 @@ TEST_CASE("Async Operation Send/Receive single message, stackful coroutine, one 
     sc.connect(subj(BOOST_CURRENT_FUNCTION));
 
     //send coroutine task
+    #if BOOST_VERSION >= 108000
+    auto future_send = 
+    #endif
     boost::asio::spawn(ios, [&](boost::asio::yield_context yield) {
       auto const btc = azmq::async_send(sc, snd_bufs, yield);
       REQUIRE(btc == 4);
@@ -897,6 +912,9 @@ TEST_CASE("Async Operation Send/Receive single message, stackful coroutine, one 
     );
 
     //receive coroutine task
+    #if BOOST_VERSION >= 108000
+    auto future_recv = 
+    #endif
     boost::asio::spawn(ios, [&](boost::asio::yield_context yield) {
       auto frame1 = azmq::message{};
       auto const btb1 = azmq::async_receive(sb, frame1, yield);
@@ -921,6 +939,11 @@ TEST_CASE("Async Operation Send/Receive single message, stackful coroutine, one 
     );
 
     ios.run();
+    // Make sure coroutines have executed
+    #if BOOST_VERSION >= 108000
+    REQUIRE(future_send.wait_for(std::chrono::seconds(1)) == std::future_status::ready);
+    REQUIRE(future_recv.wait_for(std::chrono::seconds(1)) == std::future_status::ready);
+    #endif
 }
 
 
