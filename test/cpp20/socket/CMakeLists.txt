@@ -32,7 +32,6 @@ target_link_libraries(${PROJECT_NAME}
         Azmq::azmq
         Boost::boost
         Boost::thread
-        Boost::system
         ${ZeroMQ_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT})
 
