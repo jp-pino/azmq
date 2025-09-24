@@ -18,6 +18,12 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# The FindBoost module is deprecated in cmake 3.30 and newer
+# Must be used with Boost 1.70 or newer
+if (POLICY CMP0167)
+  cmake_policy(SET CMP0167 NEW)
+endif()
+
 # --- dependencies  --
 find_package(
     Boost 1.68
