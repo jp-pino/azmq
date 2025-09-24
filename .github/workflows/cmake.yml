@@ -36,27 +36,35 @@ jobs:
           - url: system
             system_packages_ubuntu: libboost-all-dev
             system_packages_macos: boost
+            extra_cmake_args: 
           - url: BOOST_189
             system_packages_ubuntu: 
             system_packages_macos: 
+            extra_cmake_args: 
           - url: BOOST_187
             system_packages_ubuntu: 
-            system_packages_macos: 
+            system_packages_macos:  
+            extra_cmake_args: 
           - url: BOOST_184
             system_packages_ubuntu: 
-            system_packages_macos:
+            system_packages_macos: 
+            extra_cmake_args: 
           - url: BOOST_176
             system_packages_ubuntu: 
-            system_packages_macos:
+            system_packages_macos: 
+            extra_cmake_args: 
           - url: BOOST_174
             system_packages_ubuntu: 
-            system_packages_macos:
+            system_packages_macos: 
+            extra_cmake_args: 
           - url: BOOST_170
             system_packages_ubuntu: 
-            system_packages_macos:
+            system_packages_macos: 
+            extra_cmake_args: 
           - url: BOOST_168
             system_packages_ubuntu: 
-            system_packages_macos:
+            system_packages_macos: 
+            extra_cmake_args: -DUSE_CMP0167_NEW=OFF
         zmq: 
           - tag: system
             system_packages_ubuntu: libzmq3-dev
@@ -127,5 +135,5 @@ jobs:
       - name: build
         shell: bash
         run: |
-          cmake  -DBOOST_URL=${{matrix.boost.url}} -DZMQ_TAG=${{matrix.zmq.tag}} -S .github/workflows/cmake-superbuild  -B build
+          cmake  -DBOOST_URL=${{matrix.boost.url}} -DZMQ_TAG=${{matrix.zmq.tag}} ${{matrix.boost.extra_cmake_args}} -S .github/workflows/cmake-superbuild  -B build
           cmake --build build

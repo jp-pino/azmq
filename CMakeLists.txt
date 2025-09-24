@@ -20,7 +20,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # The FindBoost module is deprecated in cmake 3.30 and newer
 # Must be used with Boost 1.70 or newer
-if (POLICY CMP0167)
+option(USE_CMP0167_NEW "Use the new FindBoost module behavior" ON)
+if (POLICY CMP0167 AND USE_CMP0167_NEW)
   cmake_policy(SET CMP0167 NEW)
 endif()
 

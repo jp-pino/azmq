@@ -6,6 +6,7 @@ set(BOOST_URL "system" CACHE STRING "boost source url")
 set(ZMQ_TAG "v4.3.4" CACHE STRING "zmq tag")
 option(ZMQ_BUILD_WITH_CMAKE "use cmake (default to autotools)" no)
 option(BUILD_SHARED_LIBS "build shared (default to static)" no)
+option(USE_CMP0167_NEW "Use the new FindBoost module behavior" ON)
 
 # setup configuration derived from the option
 include(ProcessorCount)
@@ -88,6 +89,6 @@ endif ()
 ExternalProject_Add(
     azmq
     DEPENDS ${LIBS}
-    CMAKE_ARGS ${CMAKE_ARGS} -D AZMQ_BUILD_TESTS=YES
+    CMAKE_ARGS ${CMAKE_ARGS} -D AZMQ_BUILD_TESTS=YES -DUSE_CMP0167_NEW=${USE_CMP0167_NEW}
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/../../..
     TEST_BEFORE_INSTALL YES)
