@@ -23,6 +23,8 @@ endif ()
 
 include(ExternalProject)
 
+
+set(BOOST_189 "https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2")
 set(BOOST_187 "https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2")
 set(BOOST_186 "https://archives.boost.io/release/1.86.0/source/boost_1_86_0.tar.bz2")
 set(BOOST_184 "https://archives.boost.io/release/1.84.0/source/boost_1_84_0.tar.bz2")
