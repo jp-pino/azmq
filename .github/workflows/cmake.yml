@@ -7,48 +7,63 @@ on:
   pull_request:
     branches: [master]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - {
-            name: "ubuntu22",
-            os: ubuntu-22.04,
-            boost_url: system,
-            zmq_tag: system,
-            system_packages: "libboost-all-dev libzmq3-dev ",
-            cc: "gcc",
-            cxx: "g++",
-          }
-          - {
-            name: "ubuntu20 stock",
-            os: ubuntu-20.04,
-            boost_url: system,
-            zmq_tag: system,
-            system_packages: "libboost-all-dev libzmq3-dev ",
-            cc: "gcc",
-            cxx: "g++",
-          }
-          - {
-            name: "macos12 ",
-            os: macos-12,
-            boost_url: system,
-            zmq_tag: system,
-            system_packages: "zmq boost",
-            cc: "clang",
-            cxx: "clang++",
-          }
-          - {
-            name: "macos11 ",
-            os: macos-11,
-            boost_url: system,
-            zmq_tag: system,
-            system_packages: "zmq boost",
-            cc: "clang",
-            cxx: "clang++",
-          }
+        config: 
+          - os: ubuntu-24.04
+            cc: gcc
+            cxx: g++
+          - os: ubuntu-22.04
+            cc: gcc
+            cxx: g++
+          - os: macos-26
+            cc: clang
+            cxx: clang++
+          - os: macos-15
+            cc: clang
+            cxx: clang++
+          - os: macos-14
+            cc: clang
+            cxx: clang++
+          - os: macos-13
+            cc: clang
+            cxx: clang++
+        boost:
+          - url: system
+            system_packages_ubuntu: libboost-all-dev
+            system_packages_macos: boost
+          - url: BOOST_189
+            system_packages_ubuntu: 
+            system_packages_macos: 
+          - url: BOOST_187
+            system_packages_ubuntu: 
+            system_packages_macos:  
+          - url: BOOST_184
+            system_packages_ubuntu: 
+            system_packages_macos: 
+          - url: BOOST_176
+            system_packages_ubuntu: 
+            system_packages_macos: 
+          - url: BOOST_174
+            system_packages_ubuntu: 
+            system_packages_macos: 
+          - url: BOOST_170
+            system_packages_ubuntu: 
+            system_packages_macos: 
+          - url: BOOST_168
+            system_packages_ubuntu: 
+            system_packages_macos: 
+        zmq: 
+          - tag: system
+            system_packages_ubuntu: libzmq3-dev
+            system_packages_macos: zmq
 
     runs-on: ${{ matrix.config.os }}
 
@@ -56,26 +71,31 @@ jobs:
       CC: ${{ matrix.config.cc }}
       CXX: ${{ matrix.config.cxx }}
       CTEST_OUTPUT_ON_FAILURE: 1
-      PACKAGES: ${{ matrix.config.system_packages }}
+      PACKAGES_UBUNTU: ${{ matrix.boost.system_packages_ubuntu }} ${{ matrix.zmq.system_packages_ubuntu }}
+      PACKAGES_MACOS: ${{ matrix.boost.system_packages_macos }} ${{ matrix.zmq.system_packages_macos }}
+      CONFIG_OS: ${{ matrix.config.os }}
+      MATRIX: ${{ toJson(matrix) }}
 
     steps:
       - uses: actions/checkout@v3
       - name: buildtools on ubuntu
-        if: startsWith(matrix.config.name, 'ubuntu')
+        if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
         shell: bash
         run: |
-          if [ -n "$PACKAGES" ]; then
-            sudo apt-get install -y $PACKAGES
+          PACKAGES_UBUNTU=$(echo $PACKAGES_UBUNTU | sed 's/^[   ]*//;s/[    ]*$//')
+          if [ -n "$PACKAGES_UBUNTU" ]; then
+            sudo apt-get update && sudo apt-get install -y $PACKAGES_UBUNTU
           fi
       - name: buildtools on macos
-        if: startsWith(matrix.config.name, 'macos') && matrix.config.*.system_packages
+        if: ${{ startsWith(matrix.config.os, 'macos') }}
         shell: bash
         run: |
-          if [ -n "$PACKAGES" ]; then
-            brew install $PACKAGES
+          PACKAGES_MACOS=$(echo $PACKAGES_MACOS | sed 's/^[   ]*//;s/[    ]*$//')
+          if [ -n "$PACKAGES_MACOS" ]; then
+            brew install $PACKAGES_MACOS
           fi
       - name: build
         shell: bash
         run: |
-          cmake  -DBOOST_URL=${{matrix.config.boost_url}} -DZMQ_TAG=${{matrix.config.zmq_tag}} -S .github/workflows/cmake-superbuild  -B build
+          cmake  -DBOOST_URL=${{matrix.boost.url}} -DZMQ_TAG=${{matrix.zmq.tag}} ${{matrix.boost.extra_cmake_args}} -S .github/workflows/cmake-superbuild  -B build
           cmake --build build
