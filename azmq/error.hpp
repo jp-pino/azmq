@@ -15,18 +15,6 @@
 #include <zmq.h>
 #include <string>
 
-
-#if BOOST_VERSION < 105400
-    #ifndef BOOST_NOEXCEPT
-        #ifdef BOOST_NO_CXX11_NOEXCEPT
-            #define BOOST_NOEXCEPT
-        #else
-            #define BOOST_NOEXCEPT noexcept
-        #endif
-    #endif
-    #define BOOST_SYSTEM_NOEXCEPT BOOST_NOEXCEPT
-#endif
-
 namespace azmq {
 AZMQ_V1_INLINE_NAMESPACE_BEGIN
     /** \brief custom error_category to map zeromq errors */

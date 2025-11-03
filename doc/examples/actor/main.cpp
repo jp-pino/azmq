@@ -1,7 +1,7 @@
 #include <azmq/actor.hpp>
 
 #include <boost/utility/string_ref.hpp>
-#include <boost/asio/io_service.hpp>
+#include <boost/asio/io_context.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <boost/asio/deadline_timer.hpp>
@@ -17,7 +17,7 @@ namespace pt = boost::posix_time;
 
 class server_t {
 public:
-    server_t(asio::io_service & ios)
+    server_t(asio::io_context & ios)
         : pimpl_(std::make_shared<impl>())
         , frontend_(azmq::actor::spawn(ios, run, pimpl_))
     { }
@@ -97,7 +97,7 @@ void schedule_ping(asio::deadline_timer & timer, server_t & server) {
 };
 
 int main(int argc, char** argv) {
-    asio::io_service ios;
+    asio::io_context ios;
 
     std::cout << "Running...";
     std::cout.flush();

@@ -13,6 +13,7 @@
 #include <boost/asio/detached.hpp>
 #include <boost/asio/awaitable.hpp>
 #include <boost/asio/use_awaitable.hpp>
+#include <boost/current_function.hpp>
 
 #include <boost/current_function.hpp>
 
@@ -74,4 +75,3 @@ TEST_CASE("coroutine send/receive message", "[socket_cpp20]") {
     REQUIRE(btc.has_value());
     REQUIRE(btc.value() == 4);
 }
-

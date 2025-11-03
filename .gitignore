@@ -13,3 +13,9 @@
 *.a
 *.pyc
 build/*
+build_*/*
+
+# Other files
+.devcontainer
+.vscode
+.DS_Store

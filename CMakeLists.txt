@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.16.3...3.25)
-# -- v3.16.3 is the default version in the current ubuntu lts release
+cmake_minimum_required(VERSION 3.22.1...3.29.2)
+# -- v3.22.1 is the default version in the current ubuntu lts release
 
 project(azmq VERSION 1.1.0 LANGUAGES CXX)
 
@@ -21,12 +21,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # --- dependencies  --
 find_package(
     Boost 1.68
-    COMPONENTS system
-               date_time
+    COMPONENTS date_time
                thread
                chrono
                random
     REQUIRED)
+
+# Try to find Boost::system
+find_package(Boost COMPONENTS system)
+if (NOT Boost_SYSTEM_FOUND)
+    message(WARNING "Boost::system not found, some examples may not compile")
+endif()
 
 include(FindAzmqLibzmq.cmake)
 
@@ -37,7 +42,7 @@ find_package(Threads REQUIRED)
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(Azmq::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} INTERFACE Azmq::libzmq Boost::boost ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${PROJECT_NAME} INTERFACE Azmq::libzmq Boost::boost ${Boost_SYSTEM_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
 target_include_directories(${PROJECT_NAME} INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
                                                      "$<INSTALL_INTERFACE:include>")
 

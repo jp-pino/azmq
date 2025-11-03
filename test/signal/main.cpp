@@ -8,15 +8,15 @@
 */
 #include <azmq/signal.hpp>
 
-#include <boost/asio/io_service.hpp>
+#include <boost/asio/io_context.hpp>
 
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 
 TEST_CASE( "Send/Receive a signal", "[signal]" ) {
-    boost::asio::io_service ios;
-    azmq::pair_socket sb(ios);
-    azmq::pair_socket sc(ios);
+    boost::asio::io_context io;
+    azmq::pair_socket sb(io);
+    azmq::pair_socket sc(io);
 
     sb.bind("inproc://test");
     sc.connect("inproc://test");

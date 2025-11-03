@@ -9,12 +9,12 @@
 #ifndef AZMQ_DETAIL_SEND_OP_HPP_
 #define AZMQ_DETAIL_SEND_OP_HPP_
 #include "../error.hpp"
+#include "../io_service.hpp"
 #include "../message.hpp"
 #include "socket_ops.hpp"
 #include "reactor_op.hpp"
 
 #include <boost/version.hpp>
-#include <boost/asio/io_service.hpp>
 #include <boost/asio/dispatch.hpp>
 #include <boost/asio/executor_work_guard.hpp>
 #if BOOST_VERSION >= 107900
@@ -143,5 +143,3 @@ private:
 } // namespace detail
 } // namespace azmq
 #endif // AZMQ_DETAIL_SEND_OP_HPP_
-
-

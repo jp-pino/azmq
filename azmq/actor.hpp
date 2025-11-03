@@ -12,7 +12,7 @@
 #include "socket.hpp"
 #include "detail/actor_service.hpp"
 
-#include <boost/asio/io_service.hpp>
+#include "io_service.hpp"
 
 #include <functional>
 
@@ -78,4 +78,3 @@ AZMQ_V1_INLINE_NAMESPACE_END
 } // namespace actor
 } // namespace azmq
 #endif // AZMQ_ACTOR_HPP_
-

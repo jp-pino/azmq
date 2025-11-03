@@ -50,7 +50,7 @@ namespace detail {
             : azmq::detail::service_base<actor_service>(ios)
         { }
 
-        void shutdown_service() override { }
+        void shutdown() override { }
 
         using is_alive = opt::boolean<static_cast<int>(opt::limits::lib_actor_min)>;
         using detached = opt::boolean<static_cast<int>(opt::limits::lib_actor_min) + 1>;
@@ -286,4 +286,3 @@ namespace detail {
 } // namespace detail
 } // namespace azmq
 #endif // AZMQ_DETAIL_ACTOR_SERVICE_HPP_
-

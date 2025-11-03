@@ -39,27 +39,35 @@ jobs:
           - url: system
             system_packages_ubuntu: libboost-all-dev
             system_packages_macos: boost
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
           - url: BOOST_189
             system_packages_ubuntu: 
             system_packages_macos: 
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
           - url: BOOST_187
             system_packages_ubuntu: 
             system_packages_macos:  
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
           - url: BOOST_184
             system_packages_ubuntu: 
             system_packages_macos: 
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
           - url: BOOST_176
             system_packages_ubuntu: 
             system_packages_macos: 
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
           - url: BOOST_174
             system_packages_ubuntu: 
             system_packages_macos: 
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
           - url: BOOST_170
             system_packages_ubuntu: 
             system_packages_macos: 
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
           - url: BOOST_168
             system_packages_ubuntu: 
             system_packages_macos: 
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=OLD
         zmq: 
           - tag: system
             system_packages_ubuntu: libzmq3-dev

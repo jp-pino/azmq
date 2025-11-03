@@ -85,13 +85,15 @@ if (NOT (BOOST_URL STREQUAL "system"))
     list(APPEND LIBS boost)
 endif ()
 
-if (POLICY CMP0167)
-  cmake_policy(SET CMP0167 NEW)
+cmake_policy(GET CMP0167 _cmp0167_value)
+if(_cmp0167_value)
+  set(_policy_arg "-DCMAKE_POLICY_DEFAULT_CMP0167=${_cmp0167_value}")
+  message(STATUS " Setting superbuild CMP0167 to ${_cmp0167_value} ")
 endif()
 
 ExternalProject_Add(
     azmq
     DEPENDS ${LIBS}
-    CMAKE_ARGS ${CMAKE_ARGS} -D AZMQ_BUILD_TESTS=YES
+    CMAKE_ARGS ${CMAKE_ARGS} -D AZMQ_BUILD_TESTS=YES ${_policy_arg}
     SOURCE_DIR ${CMAKE_SOURCE_DIR}/../../..
     TEST_BEFORE_INSTALL YES)

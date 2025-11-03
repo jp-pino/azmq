@@ -9,11 +9,11 @@
 #ifndef AZMQ_DETAIL_REACTOR_OP_HPP_
 #define AZMQ_DETAIL_REACTOR_OP_HPP_
 
+#include "../io_service.hpp"
 #include "../message.hpp"
 #include "socket_ops.hpp"
 
 #include <boost/optional.hpp>
-#include <boost/asio/io_service.hpp>
 
 namespace azmq {
 namespace detail {
@@ -41,4 +41,3 @@ protected:
 } // namespace detail
 } // namespace azmq
 #endif // AZMQ_DETAIL_REACTOR_OP_HPP_
-
