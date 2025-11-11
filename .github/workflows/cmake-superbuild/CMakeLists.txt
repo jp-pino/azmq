@@ -42,7 +42,7 @@ if (PATCH_MACOS_BOOST)
     # apply patch to build boost on macos
     # Patch source: fix-darwin-version.patch in same directory as this CMakeLists.txt
     set(BOOST_PATCH_FILE "${CMAKE_CURRENT_LIST_DIR}/fix-darwin-version.patch")
-    set(BOOST_PATCH_COMMAND "patch -p2 ./tools/build/src/tools/darwin.jam < ${BOOST_PATCH_FILE}")
+    set(BOOST_PATCH_COMMAND "patch tools/build/src/tools/darwin.jam -i ${BOOST_PATCH_FILE}")
 else()
     set(BOOST_PATCH_COMMAND "echo No patch needed")
 endif()
