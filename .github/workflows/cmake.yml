@@ -52,6 +52,10 @@ jobs:
             system_packages_ubuntu: 
             system_packages_macos: 
             extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
+          - url: BOOST_181
+            system_packages_ubuntu: 
+            system_packages_macos: 
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
           - url: BOOST_176
             system_packages_ubuntu: 
             system_packages_macos: 
@@ -72,6 +76,64 @@ jobs:
           - tag: system
             system_packages_ubuntu: libzmq3-dev
             system_packages_macos: zmq
+        exclude:
+          - config:
+              os: ubuntu-22.04
+            boost:
+              url: BOOST_170
+          - config:
+              os: ubuntu-24.04
+            boost:
+              url: BOOST_170
+          # Exclude Boost < 1.81 on macOS due to build issues
+          - config:
+              os: macos-15
+            boost:
+              url: BOOST_176
+          - config:
+              os: macos-15
+            boost:
+              url: BOOST_174
+          - config:
+              os: macos-15
+            boost:
+              url: BOOST_170
+          - config:
+              os: macos-15
+            boost:
+              url: BOOST_168
+          - config:
+              os: macos-14
+            boost:
+              url: BOOST_176
+          - config:
+              os: macos-14
+            boost:
+              url: BOOST_174
+          - config:
+              os: macos-14
+            boost:
+              url: BOOST_170
+          - config:
+              os: macos-14
+            boost:
+              url: BOOST_168
+          - config:
+              os: macos-13
+            boost:
+              url: BOOST_176
+          - config:
+              os: macos-13
+            boost:
+              url: BOOST_174
+          - config:
+              os: macos-13
+            boost:
+              url: BOOST_170
+          - config:
+              os: macos-13
+            boost:
+              url: BOOST_168
 
     runs-on: ${{ matrix.config.os }}
 
