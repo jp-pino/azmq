@@ -87,7 +87,7 @@ if (NOT (BOOST_URL STREQUAL "system"))
         URL ${${BOOST_URL}}
         BUILD_IN_SOURCE 1
         INSTALL_DIR ${DEVROOT}
-        PATCH_COMMAND pwd && ${BOOST_PATCH_COMMAND}
+        PATCH_COMMAND pwd && ls && ${BOOST_PATCH_COMMAND}
         CONFIGURE_COMMAND ./bootstrap.sh --prefix=<INSTALL_DIR>
         BUILD_COMMAND ""
         INSTALL_COMMAND ./b2 install --prefix=<INSTALL_DIR> -j${CPU_COUNT} --warnings-as-errors=off --without-python --without-math)
