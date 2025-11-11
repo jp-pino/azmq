@@ -40,10 +40,12 @@ set(DEVROOT ${CMAKE_BINARY_DIR}/devroot)
 
 if (PATCH_MACOS_BOOST)
     # apply patch to build boost on macos
-    # Patch source: fix-darwing-version.patch in same directory as this CMakeLists.txt 
-    set(BOOST_PATCH_FILE ${CMAKE_CURRENT_LIST_DIR}/fix-darwing-version.patch)
+    # Patch source: fix-darwin-version.patch in same directory as this CMakeLists.txt
+    set(BOOST_PATCH_FILE ${CMAKE_CURRENT_LIST_DIR}/fix-darwin-version.patch)
     set(BOOST_PATCH_COMMAND "patch tools/build/src/tools/darwin.jam ${BOOST_PATCH_FILE}")
-endif ()
+else()
+    set(BOOST_PATCH_COMMAND "echo No patch needed")
+endif()
 
 set(CMAKE_ARGS
     -DCMAKE_BUILD_TYPE=Debug
@@ -87,7 +89,7 @@ if (NOT (BOOST_URL STREQUAL "system"))
         URL ${${BOOST_URL}}
         BUILD_IN_SOURCE 1
         INSTALL_DIR ${DEVROOT}
-        PATCH_COMMAND pwd && ls && ${BOOST_PATCH_COMMAND}
+        PATCH_COMMAND ${BOOST_PATCH_COMMAND}
         CONFIGURE_COMMAND ./bootstrap.sh --prefix=<INSTALL_DIR>
         BUILD_COMMAND ""
         INSTALL_COMMAND ./b2 install --prefix=<INSTALL_DIR> -j${CPU_COUNT} --warnings-as-errors=off --without-python --without-math)
