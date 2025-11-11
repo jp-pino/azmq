@@ -115,6 +115,7 @@ jobs:
           if [ -n "$PACKAGES_MACOS" ]; then
             brew install $PACKAGES_MACOS
           fi
+          which patch || echo "patch not found"
       - name: build
         shell: bash
         run: |
