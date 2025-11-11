@@ -59,19 +59,19 @@ jobs:
           - url: BOOST_176
             system_packages_ubuntu: 
             system_packages_macos: 
-            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW -DPATCH_MACOS_BOOST=YES
           - url: BOOST_174
             system_packages_ubuntu: 
             system_packages_macos: 
-            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW -DPATCH_MACOS_BOOST=YES
           - url: BOOST_170
             system_packages_ubuntu: 
             system_packages_macos: 
-            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW -DPATCH_MACOS_BOOST=YES
           - url: BOOST_168
             system_packages_ubuntu: 
             system_packages_macos: 
-            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=OLD
+            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=OLD -DPATCH_MACOS_BOOST=YES
         zmq: 
           - tag: system
             system_packages_ubuntu: libzmq3-dev
@@ -85,55 +85,6 @@ jobs:
               os: ubuntu-24.04
             boost:
               url: BOOST_170
-          # Exclude Boost < 1.81 on macOS due to build issues
-          - config:
-              os: macos-15
-            boost:
-              url: BOOST_176
-          - config:
-              os: macos-15
-            boost:
-              url: BOOST_174
-          - config:
-              os: macos-15
-            boost:
-              url: BOOST_170
-          - config:
-              os: macos-15
-            boost:
-              url: BOOST_168
-          - config:
-              os: macos-14
-            boost:
-              url: BOOST_176
-          - config:
-              os: macos-14
-            boost:
-              url: BOOST_174
-          - config:
-              os: macos-14
-            boost:
-              url: BOOST_170
-          - config:
-              os: macos-14
-            boost:
-              url: BOOST_168
-          - config:
-              os: macos-13
-            boost:
-              url: BOOST_176
-          - config:
-              os: macos-13
-            boost:
-              url: BOOST_174
-          - config:
-              os: macos-13
-            boost:
-              url: BOOST_170
-          - config:
-              os: macos-13
-            boost:
-              url: BOOST_168
 
     runs-on: ${{ matrix.config.os }}
 

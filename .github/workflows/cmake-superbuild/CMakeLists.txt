@@ -6,6 +6,7 @@ set(BOOST_URL "system" CACHE STRING "boost source url")
 set(ZMQ_TAG "v4.3.4" CACHE STRING "zmq tag")
 option(ZMQ_BUILD_WITH_CMAKE "use cmake (default to autotools)" no)
 option(BUILD_SHARED_LIBS "build shared (default to static)" no)
+option(PATCH_MACOS_BOOST "apply patch to build boost on macos" no)
 
 # setup configuration derived from the option
 include(ProcessorCount)
@@ -23,8 +24,7 @@ endif ()
 
 include(ExternalProject)
 
-
-set(BOOST_189 "https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2")
+set(BOOST_189 "https://archives.boost.io/release/1.89.0/source/boost_1_89_0.tar.bz2")
 set(BOOST_187 "https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2")
 set(BOOST_186 "https://archives.boost.io/release/1.86.0/source/boost_1_86_0.tar.bz2")
 set(BOOST_184 "https://archives.boost.io/release/1.84.0/source/boost_1_84_0.tar.bz2")
@@ -37,6 +37,13 @@ set(BOOST_170 "https://archives.boost.io/release/1.70.0/source/boost_1_70_0.tar.
 set(BOOST_168 "https://archives.boost.io/release/1.68.0/source/boost_1_68_0.tar.bz2")
 
 set(DEVROOT ${CMAKE_BINARY_DIR}/devroot)
+
+if (PATCH_MACOS_BOOST)
+    # apply patch to build boost on macos
+    # Patch source: fix-darwing-version.patch in same directory as this CMakeLists.txt 
+    set(BOOST_PATCH_FILE ${CMAKE_CURRENT_LIST_DIR}/fix-darwing-version.patch)
+    set(BOOST_PATCH_COMMAND "patch tools/build/src/tools/darwin.jam ${BOOST_PATCH_FILE}")
+endif ()
 
 set(CMAKE_ARGS
     -DCMAKE_BUILD_TYPE=Debug
@@ -80,16 +87,19 @@ if (NOT (BOOST_URL STREQUAL "system"))
         URL ${${BOOST_URL}}
         BUILD_IN_SOURCE 1
         INSTALL_DIR ${DEVROOT}
+        PATCH_COMMAND ${BOOST_PATCH_COMMAND}
         CONFIGURE_COMMAND ./bootstrap.sh --prefix=<INSTALL_DIR>
         BUILD_COMMAND ""
         INSTALL_COMMAND ./b2 install --prefix=<INSTALL_DIR> -j${CPU_COUNT} --warnings-as-errors=off --without-python --without-math)
     list(APPEND LIBS boost)
 endif ()
 
-cmake_policy(GET CMP0167 _cmp0167_value)
-if(_cmp0167_value)
-  set(_policy_arg "-DCMAKE_POLICY_DEFAULT_CMP0167=${_cmp0167_value}")
-  message(STATUS " Setting superbuild CMP0167 to ${_cmp0167_value} ")
+if(POLICY CMP0167)
+    cmake_policy(GET CMP0167 _cmp0167_value)
+    if(_cmp0167_value)
+        set(_policy_arg "-DCMAKE_POLICY_DEFAULT_CMP0167=${_cmp0167_value}")
+        message(STATUS " Setting superbuild CMP0167 to ${_cmp0167_value} ")
+    endif()
 endif()
 
 ExternalProject_Add(
