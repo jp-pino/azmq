@@ -265,10 +265,11 @@ namespace detail {
         }
 
         template<typename ConstBufferSequence>
-        static size_t send(ConstBufferSequence const& buffers,
+        static auto send(ConstBufferSequence const& buffers,
                          socket_type & socket,
                          flags_type flags,
-                         boost::system::error_code & ec) 
+                         boost::system::error_code & ec) ->
+            typename boost::enable_if<boost::has_range_const_iterator<ConstBufferSequence>, size_t>::type
         {
             size_t res = 0;
             auto last = std::distance(boost::asio::buffer_sequence_begin(buffers), boost::asio::buffer_sequence_end(buffers)) - 1;
@@ -296,10 +297,11 @@ namespace detail {
         }
 
         template<typename MutableBufferSequence>
-        static size_t receive(MutableBufferSequence const& buffers,
+        static auto receive(MutableBufferSequence const& buffers,
                             socket_type & socket,
                             flags_type flags,
-                            boost::system::error_code & ec) 
+                            boost::system::error_code & ec) ->
+            typename boost::enable_if<boost::has_range_const_iterator<MutableBufferSequence>, size_t>::type
         {
             size_t res = 0;
             message msg;
