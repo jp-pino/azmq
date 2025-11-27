@@ -91,7 +91,7 @@ public:
     using conflate = opt::boolean<ZMQ_CONFLATE>;
 
     /** \brief socket constructor
-     *  \param ios reference to an asio::io_context
+     *  \param ioc reference to an asio::io_context
      *  \param s_type int socket type
      *      For socket types see the zeromq documentation
      *  \param optimize_single_threaded bool
@@ -105,10 +105,10 @@ public:
      *      io_context.run() you may bypass the mutex by passing true for
      *      optimize_single_threaded.
      */
-    explicit socket(boost::asio::io_context& ios,
+    explicit socket(boost::asio::io_context& ioc,
                     int type,
                     bool optimize_single_threaded = false)
-            : azmq::detail::basic_io_object<detail::socket_service>(ios) {
+            : azmq::detail::basic_io_object<detail::socket_service>(ioc) {
         boost::system::error_code ec;
         if (get_service().do_open(get_implementation(), type, optimize_single_threaded, ec))
             throw boost::system::system_error(ec);
@@ -648,16 +648,16 @@ public:
     }
 
     /** \brief monitor events on a socket
-        *  \param ios io_context on which to bind the returned monitor socket
+        *  \param ioc io_context on which to bind the returned monitor socket
         *  \param events int mask of events to publish to returned socket
         *  \param ec error_code to set on error
         *  \returns socket
     **/
-    socket monitor(boost::asio::io_context & ios,
+    socket monitor(boost::asio::io_context & ioc,
                    int events,
                    boost::system::error_code & ec) {
         auto uri = get_service().monitor(get_implementation(), events, ec);
-        socket res(ios, ZMQ_PAIR);
+        socket res(ioc, ZMQ_PAIR);
         if (ec)
             return res;
 
@@ -667,14 +667,14 @@ public:
     }
 
     /** \brief monitor events on a socket
-        *  \param ios io_context on which to bind the returned monitor socket
+        *  \param ioc io_context on which to bind the returned monitor socket
         *  \param events int mask of events to publish to returned socket
         *  \returns socket
     **/
-    socket monitor(boost::asio::io_context & ios,
+    socket monitor(boost::asio::io_context & ioc,
                    int events) {
         boost::system::error_code ec;
-        auto res = monitor(ios, events, ec);
+        auto res = monitor(ioc, events, ec);
         if (ec)
             throw boost::system::system_error(ec);
         return res;
@@ -774,9 +774,9 @@ namespace detail {
         typedef socket Base;
 
     public:
-        specialized_socket(boost::asio::io_context & ios,
+        specialized_socket(boost::asio::io_context & ioc,
                            bool optimize_single_threaded = false)
-            : Base(ios, Type, optimize_single_threaded)
+            : Base(ioc, Type, optimize_single_threaded)
         {
             // Note that we expect these to get sliced to socket, so DO NOT add any data members
             static_assert(sizeof(*this) == sizeof(socket), "Specialized socket must not have any specific data members");

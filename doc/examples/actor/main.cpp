@@ -17,9 +17,9 @@ namespace pt = boost::posix_time;
 
 class server_t {
 public:
-    server_t(asio::io_context & ios)
+    server_t(asio::io_context & ioc)
         : pimpl_(std::make_shared<impl>())
-        , frontend_(azmq::actor::spawn(ios, run, pimpl_))
+        , frontend_(azmq::actor::spawn(ioc, run, pimpl_))
     { }
 
     void ping() {
@@ -97,29 +97,29 @@ void schedule_ping(asio::deadline_timer & timer, server_t & server) {
 };
 
 int main(int argc, char** argv) {
-    asio::io_context ios;
+    asio::io_context ioc;
 
     std::cout << "Running...";
     std::cout.flush();
 
     // halt on SIGINT or SIGTERM
-    asio::signal_set signals(ios, SIGTERM, SIGINT);
+    asio::signal_set signals(ioc, SIGTERM, SIGINT);
     signals.async_wait([&](boost::system::error_code const&, int) {
-        ios.stop();
+        ioc.stop();
     });
 
-    server_t server(ios);
+    server_t server(ioc);
 
-    asio::deadline_timer timer(ios);
+    asio::deadline_timer timer(ioc);
     schedule_ping(timer, server);
 
     // run for 5 secods
-    asio::deadline_timer deadline(ios, pt::seconds(5));
+    asio::deadline_timer deadline(ioc, pt::seconds(5));
     deadline.async_wait([&](boost::system::error_code const&) {
-        ios.stop();
+        ioc.stop();
     });
 
-    ios.run();
+    ioc.run();
 
     std::cout << "Done. Results - " << server << std::endl;
 

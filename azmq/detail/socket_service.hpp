@@ -85,7 +85,7 @@ namespace detail {
             bool serverish_ = false;
             std::array<op_queue_type, max_ops> op_queues_;
 
-            void do_open(boost::asio::io_context & ios,
+            void do_open(boost::asio::io_context & ioc,
                          context_type & ctx,
                          int type,
                          bool optimize_single_threaded,
@@ -94,7 +94,7 @@ namespace detail {
                 socket_ = socket_ops::create_socket(ctx, type, ec);
                 if (ec) return;
 
-                sd_ = socket_ops::get_stream_descriptor(ios, socket_, ec);
+                sd_ = socket_ops::get_stream_descriptor(ioc, socket_, ec);
                 if (ec) return;
 
                 optimize_single_threaded_ = optimize_single_threaded;
@@ -185,8 +185,8 @@ namespace detail {
 
         using core_access = azmq::detail::core_access<socket_service>;
 
-        explicit socket_service(boost::asio::io_context & ios)
-            : azmq::detail::service_base<socket_service>(ios)
+        explicit socket_service(boost::asio::io_context & ioc)
+            : azmq::detail::service_base<socket_service>(ioc)
             , ctx_(context_ops::get_context())
         { }
 

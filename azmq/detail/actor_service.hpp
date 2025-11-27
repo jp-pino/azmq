@@ -39,9 +39,9 @@ namespace detail {
     public:
         inline static std::string get_uri(const char* pfx);
 
-        actor_service(boost::asio::io_context & ios)
+        actor_service(boost::asio::io_context & ioc)
 
-            : azmq::detail::service_base<actor_service>(ios)
+            : azmq::detail::service_base<actor_service>(ioc)
         { }
 
         void shutdown() override { }
@@ -57,9 +57,9 @@ namespace detail {
         }
 
         template<typename T>
-        static socket make_pipe(boost::asio::io_context & ios, bool defer_start, T&& data) {
+        static socket make_pipe(boost::asio::io_context & ioc, bool defer_start, T&& data) {
             auto p = std::make_shared<model<T>>(std::forward<T>(data));
-            auto res = p->peer_socket(ios);
+            auto res = p->peer_socket(ioc);
             associate_ext(res, handler(std::move(p), defer_start));
             return std::move(res);
         }
