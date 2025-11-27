@@ -18,21 +18,27 @@ jobs:
       matrix:
         config: 
           - os: ubuntu-24.04
+            family: ubuntu
             cc: gcc
             cxx: g++
           - os: ubuntu-22.04
+            family: ubuntu
             cc: gcc
             cxx: g++
           - os: macos-26
+            family: macos
             cc: clang
             cxx: clang++
           - os: macos-15
+            family: macos
             cc: clang
             cxx: clang++
           - os: macos-14
+            family: macos
             cc: clang
             cxx: clang++
           - os: macos-13
+            family: macos
             cc: clang
             cxx: clang++
         boost:
@@ -64,10 +70,6 @@ jobs:
             system_packages_ubuntu: 
             system_packages_macos: 
             extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
-          - url: BOOST_170
-            system_packages_ubuntu: 
-            system_packages_macos: 
-            extra_cmake_args: -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
           - url: BOOST_168
             system_packages_ubuntu: 
             system_packages_macos: 
@@ -76,6 +78,23 @@ jobs:
           - tag: system
             system_packages_ubuntu: libzmq3-dev
             system_packages_macos: zmq
+        exclude:
+          - config:
+              family: macos
+            boost:
+              url: BOOST_176
+          - config:
+              family: macos
+            boost:
+              url: BOOST_174
+          - config:
+              family: macos
+            boost:
+              url: BOOST_168
+          - config:
+              os: macos-14
+            boost:
+              url: BOOST_181
 
     runs-on: ${{ matrix.config.os }}
 
