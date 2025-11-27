@@ -35,7 +35,6 @@ set(BOOST_174 "https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.
 set(BOOST_172 "https://archives.boost.io/release/1.72.0/source/boost_1_72_0.tar.bz2")
 set(BOOST_170 "https://archives.boost.io/release/1.70.0/source/boost_1_70_0.tar.bz2")
 set(BOOST_168 "https://archives.boost.io/release/1.68.0/source/boost_1_68_0.tar.bz2")
-set(BOOST_165 "https://archives.boost.io/release/1.65.0/source/boost_1_65_0.tar.bz2")
 
 set(DEVROOT ${CMAKE_BINARY_DIR}/devroot)
 
