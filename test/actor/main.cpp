@@ -52,7 +52,7 @@ TEST_CASE( "Async Send/Receive", "[actor]" ) {
                 btb = bytes_transferred;
                 io.stop();
             });
-            ss.get_io_service().run();
+            ss.get_io_context().run();
         });
 
         s.async_send(snd_bufs, [&] (boost::system::error_code const& ec, size_t bytes_transferred) {

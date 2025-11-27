@@ -24,10 +24,11 @@ endif ()
 include(ExternalProject)
 
 
-set(BOOST_189 "https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2")
+set(BOOST_189 "https://archives.boost.io/release/1.89.0/source/boost_1_89_0.tar.bz2")
 set(BOOST_187 "https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2")
 set(BOOST_186 "https://archives.boost.io/release/1.86.0/source/boost_1_86_0.tar.bz2")
 set(BOOST_184 "https://archives.boost.io/release/1.84.0/source/boost_1_84_0.tar.bz2")
+set(BOOST_181 "https://archives.boost.io/release/1.81.0/source/boost_1_81_0.tar.bz2")
 set(BOOST_177 "https://archives.boost.io/release/1.77.0/source/boost_1_77_0.tar.bz2")
 set(BOOST_176 "https://archives.boost.io/release/1.76.0/source/boost_1_76_0.tar.bz2")
 set(BOOST_174 "https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.bz2")

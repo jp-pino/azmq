@@ -9,10 +9,10 @@
 #ifndef AZMQ_DETAIL_REACTOR_OP_HPP_
 #define AZMQ_DETAIL_REACTOR_OP_HPP_
 
-#include "../io_service.hpp"
 #include "../message.hpp"
 #include "socket_ops.hpp"
 
+#include <boost/asio/io_context.hpp>
 #include <boost/optional.hpp>
 
 namespace azmq {

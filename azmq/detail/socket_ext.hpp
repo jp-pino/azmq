@@ -9,8 +9,8 @@
 #ifndef AZMQ_DETAIL_SOCKET_EXT_HPP__
 #define AZMQ_DETAIL_SOCKET_EXT_HPP__
 #include "../error.hpp"
-#include "../io_service.hpp"
 
+#include <boost/asio/io_context.hpp>
 #include <boost/assert.hpp>
 
 #include <memory>
@@ -35,9 +35,9 @@ namespace detail {
             return *this;
         }
 
-        void on_install(boost::asio::io_service& ios, void * socket) const {
+        void on_install(boost::asio::io_context& ioc, void * socket) const {
             BOOST_ASSERT_MSG(ptr_, "reusing moved instance of socket_ext");
-            ptr_->on_install(ios, socket);
+            ptr_->on_install(ioc, socket);
         }
 
         void on_remove() {
@@ -83,7 +83,7 @@ namespace detail {
         struct concept_ {
             virtual ~concept_() = default;
 
-            virtual void on_install(boost::asio::io_service &, void *) = 0;
+            virtual void on_install(boost::asio::io_context &, void *) = 0;
             virtual void on_remove() = 0;
             virtual boost::system::error_code set_option(opt_concept const&, boost::system::error_code &) = 0;
             virtual boost::system::error_code get_option(opt_concept &, boost::system::error_code &) = 0;
@@ -96,7 +96,7 @@ namespace detail {
 
             model(T data): data_(std::move(data)) { }
 
-            void on_install(boost::asio::io_service & ios, void * socket) override { data_.on_install(ios, socket); }
+            void on_install(boost::asio::io_context & ioc, void * socket) override { data_.on_install(ioc, socket); }
             void on_remove() override { data_.on_remove(); }
             boost::system::error_code set_option(opt_concept const& opt, boost::system::error_code & ec) override {
                 return data_.set_option(opt, ec);

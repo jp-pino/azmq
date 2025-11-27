@@ -9,7 +9,7 @@
 #ifndef AZMQ_DETAIL_BASIC_IO_OBJECT_HPP__
 #define AZMQ_DETAIL_BASIC_IO_OBJECT_HPP__
 
-#include "../io_service.hpp"
+#include <boost/asio/io_context.hpp>
 #include <boost/asio/basic_io_object.hpp>
 
 namespace azmq {
@@ -41,8 +41,8 @@ namespace detail {
         friend class core_access<Service>;
 
     public:
-        basic_io_object(boost::asio::io_service& ios)
-            : boost::asio::basic_io_object<Service>(ios)
+        basic_io_object(boost::asio::io_context& ioc)
+            : boost::asio::basic_io_object<Service>(ioc)
         { }
     };
 } // namespace detail
