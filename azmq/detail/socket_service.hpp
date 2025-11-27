@@ -11,6 +11,7 @@
 #include "../error.hpp"
 #include "../message.hpp"
 #include "../option.hpp"
+#include "../io_context.hpp"
 #include "../util/scope_guard.hpp"
 #include "config/mutex.hpp"
 #include "config/lock_guard.hpp"
@@ -31,10 +32,8 @@
 #include <boost/container/flat_map.hpp>
 #include <boost/thread/mutex.hpp>
 
-#if BOOST_VERSION < 107000
-#   define AZMQ_DETAIL_USE_IO_SERVICE 1
-#else
-#   include <boost/asio/post.hpp>
+#if BOOST_VERSION >= 106600
+#include <boost/asio/post.hpp>
 #endif
 
 #include <memory>
@@ -89,11 +88,7 @@ namespace detail {
             bool serverish_ = false;
             std::array<op_queue_type, max_ops> op_queues_;
 
-#ifdef AZMQ_DETAIL_USE_IO_SERVICE
-            void do_open(boost::asio::io_service & ios,
-#else
             void do_open(boost::asio::io_context & ios,
-#endif			 
                          context_type & ctx,
                          int type,
                          bool optimize_single_threaded,
@@ -193,11 +188,7 @@ namespace detail {
 
         using core_access = azmq::detail::core_access<socket_service>;
 
-#ifdef AZMQ_DETAIL_USE_IO_SERVICE	  
-        explicit socket_service(boost::asio::io_service & ios)
-#else
-        explicit socket_service(boost::asio::io_service & ios)
-#endif
+        explicit socket_service(boost::asio::io_context & ios)
             : azmq::detail::service_base<socket_service>(ios)
             , ctx_(context_ops::get_context())
         { }
@@ -229,11 +220,7 @@ namespace detail {
                                           bool optimize_single_threaded,
                                           boost::system::error_code & ec) {
             BOOST_ASSERT_MSG(impl, "impl");
-#ifdef AZMQ_DETAIL_USE_IO_SERVICE
-            impl->do_open(get_io_service(), ctx_, type, optimize_single_threaded, ec);
-#else
-            impl->do_open(get_io_context(), ctx_, type, optimize_single_threaded, ec);
-#endif
+            impl->do_open(AZMQ_DETAIL_GET_IO_CONTEXT(), ctx_, type, optimize_single_threaded, ec);
             if (ec)
                 impl.reset();
             return ec;
@@ -258,11 +245,7 @@ namespace detail {
             std::tie(it, res) = impl->exts_.emplace(std::type_index(typeid(Extension)),
                                                     socket_ext(std::forward<Extension>(ext)));
             if (res)
-#ifdef AZMQ_DETAIL_USE_IO_SERVICE
-                it->second.on_install(get_io_service(), impl->socket_.get());
-#else
-                it->second.on_install(get_io_context(), impl->socket_.get());
-#endif
+                it->second.on_install(AZMQ_DETAIL_GET_IO_CONTEXT(), impl->socket_.get());
             return res;
         }
 
@@ -559,7 +542,7 @@ namespace detail {
 #ifdef AZMQ_DETAIL_USE_IO_SERVICE
                 impl->sd_->get_io_service().post([weak_impl, ec]() { handle_missed_events(weak_impl, ec); });
 #else
-		boost::asio::post(impl->sd_->get_executor(), [weak_impl, ec]() { handle_missed_events(weak_impl, ec); });
+		        boost::asio::post(impl->sd_->get_executor(), [weak_impl, ec]() { handle_missed_events(weak_impl, ec); });
 #endif
             }
         }

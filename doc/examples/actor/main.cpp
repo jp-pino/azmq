@@ -76,7 +76,7 @@ private:
     // This is the function run by the background thread
     static void run(azmq::socket & backend, ptr pimpl) {
         do_receive(backend, pimpl);
-        backend.get_io_service().run();
+        backend.get_io_context().run();
     }
 
     azmq::socket frontend_;

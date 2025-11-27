@@ -52,7 +52,7 @@ std::string subj(const char* name) {
 }
 
 TEST_CASE( "Set/Get options", "[socket]" ) {
-    boost::asio::io_service ios;
+    boost::asio::io_context ios;
 
     azmq::socket s(ios, ZMQ_ROUTER);
 
@@ -73,7 +73,7 @@ TEST_CASE( "Set/Get options", "[socket]" ) {
 }
 
 TEST_CASE( "Send/Receive single buffer", "[socket]") {
-    boost::asio::io_service ios;
+    boost::asio::io_context ios;
 
     azmq::socket sb(ios, ZMQ_PAIR);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
@@ -93,7 +93,7 @@ TEST_CASE( "Send/Receive single buffer", "[socket]") {
 }
 
 TEST_CASE( "Send/Receive single message", "[socket]") {
-    boost::asio::io_service ios;
+    boost::asio::io_context ios;
 
     azmq::socket sb(ios, ZMQ_PAIR);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
@@ -114,7 +114,7 @@ TEST_CASE( "Send/Receive single message", "[socket]") {
 }
 
 TEST_CASE( "Send/Receive synchronous", "[socket]" ) {
-    boost::asio::io_service ios;
+    boost::asio::io_context ios;
 
     azmq::socket sb(ios, ZMQ_ROUTER);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
@@ -153,8 +153,8 @@ TEST_CASE( "Send/Receive synchronous", "[socket]" ) {
 }
 
 TEST_CASE( "Send/Receive async", "[socket_ops]" ) {
-    boost::asio::io_service ios_b;
-    boost::asio::io_service ios_c;
+    boost::asio::io_context ios_b;
+    boost::asio::io_context ios_c;
 
     azmq::socket sb(ios_b, ZMQ_ROUTER);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
@@ -203,7 +203,7 @@ TEST_CASE( "Async send/receive copies buffer refs", "[socket_ops]" ) {
 
     class Base {
     protected:
-        boost::asio::io_service ioservice;
+        boost::asio::io_context ioservice;
         azmq::pair_socket sock;
         boost::system::error_code error;
         size_t bytes = 0;
@@ -312,8 +312,8 @@ TEST_CASE( "Async send/receive copies buffer refs", "[socket_ops]" ) {
 }
 
 TEST_CASE( "Send/Receive async is_speculative", "[socket_ops]" ) {
-    boost::asio::io_service ios_b;
-    boost::asio::io_service ios_c;
+    boost::asio::io_context ios_b;
+    boost::asio::io_context ios_c;
 
     azmq::socket sb(ios_b, ZMQ_ROUTER);
     sb.set_option(azmq::socket::allow_speculative(true));
@@ -359,11 +359,11 @@ TEST_CASE( "Send/Receive async is_speculative", "[socket_ops]" ) {
 }
 
 TEST_CASE( "Send/Receive async threads", "[socket]" ) {
-    boost::asio::io_service ios_b;
+    boost::asio::io_context ios_b;
     azmq::socket sb(ios_b, ZMQ_ROUTER);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
 
-    boost::asio::io_service ios_c;
+    boost::asio::io_context ios_c;
     azmq::socket sc(ios_c, ZMQ_DEALER);
     sc.connect(subj(BOOST_CURRENT_FUNCTION));
 
@@ -408,8 +408,8 @@ TEST_CASE( "Send/Receive async threads", "[socket]" ) {
 }
 
 TEST_CASE( "Send/Receive message async", "[socket]" ) {
-    boost::asio::io_service ios_b;
-    boost::asio::io_service ios_c;
+    boost::asio::io_context ios_b;
+    boost::asio::io_context ios_c;
 
     azmq::socket sb(ios_b, ZMQ_ROUTER);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
@@ -464,8 +464,8 @@ TEST_CASE( "Send/Receive message async", "[socket]" ) {
 }
 
 TEST_CASE( "Send/Receive message more async", "[socket]" ) {
-    boost::asio::io_service ios_b;
-    boost::asio::io_service ios_c;
+    boost::asio::io_context ios_b;
+    boost::asio::io_context ios_c;
 
     azmq::socket sb(ios_b, ZMQ_ROUTER);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
@@ -543,7 +543,7 @@ struct monitor_handler {
     std::string role_;
     std::vector<event_t> events_;
 
-    monitor_handler(boost::asio::io_service & ios, azmq::socket& s, std::string role)
+    monitor_handler(boost::asio::io_context & ios, azmq::socket& s, std::string role)
         : socket_(s.monitor(ios, ZMQ_EVENT_ALL))
         , role_(std::move(role))
     { }
@@ -592,8 +592,8 @@ void bounce(azmq::socket & server, azmq::socket & client) {
 }
 
 TEST_CASE( "Socket Monitor", "[socket]" ) {
-    boost::asio::io_service ios;
-    boost::asio::io_service ios_m;
+    boost::asio::io_context ios;
+    boost::asio::io_context ios_m;
 
     using socket_ptr = std::unique_ptr<azmq::socket>;
     socket_ptr client(new azmq::socket(ios, ZMQ_DEALER));
@@ -652,7 +652,7 @@ TEST_CASE( "Socket Monitor", "[socket]" ) {
 
 TEST_CASE( "Attach Method", "[socket]" ) {
     using namespace boost::algorithm;
-    boost::asio::io_service ios;
+    boost::asio::io_context ios;
     azmq::dealer_socket s(ios);
 
     std::vector<std::string> elems;
@@ -662,7 +662,7 @@ TEST_CASE( "Attach Method", "[socket]" ) {
 }
 
 TEST_CASE( "Pub/Sub", "[socket]" ) {
-    boost::asio::io_service ios;
+    boost::asio::io_context ios;
     azmq::sub_socket subscriber(ios);
     subscriber.connect("tcp://127.0.0.1:5556");
     subscriber.set_option(azmq::socket::subscribe("FOO"));
@@ -697,20 +697,20 @@ struct state {
         sb.async_receive(rcv_bufs, [&] (boost::system::error_code const& ec, size_t) {
             if (ec) {
                 s.ec = ec;
-                sb.get_io_service().stop();
+                sb.get_io_context().stop();
                 return;
             }
 
             if (++s.ct >= s.max)
-                sb.get_io_service().stop();
+                sb.get_io_context().stop();
             run(s, sb);
         });
     }
 };
 
 TEST_CASE( "Loopback", "[socket]" ) {
-    boost::asio::io_service ios_b;
-    boost::asio::io_service ios_c;
+    boost::asio::io_context ios_b;
+    boost::asio::io_context ios_c;
 
     azmq::socket sb(ios_b, ZMQ_ROUTER);
     sb.bind("tcp://127.0.0.1:5560");
@@ -736,7 +736,7 @@ TEST_CASE( "Loopback", "[socket]" ) {
 }
 
 TEST_CASE( "socket_service does not call pending completion handlers when destroyed", "[socket]" ) {
-    boost::asio::io_service ioservice;
+    boost::asio::io_context ioservice;
     azmq::socket socket(ioservice, ZMQ_ROUTER);
     socket.bind(subj(BOOST_CURRENT_FUNCTION));
     socket.async_receive([](boost::system::error_code const& ec, azmq::message & msg, size_t bytes_transferred) {
@@ -747,8 +747,8 @@ TEST_CASE( "socket_service does not call pending completion handlers when destro
 #if BOOST_VERSION >= 107000
 
 TEST_CASE("Async Operation Send/Receive with callback", "[socket_ops]") {
-    boost::asio::io_service ios_b;
-    boost::asio::io_service ios_c;
+    boost::asio::io_context ios_b;
+    boost::asio::io_context ios_c;
 
     azmq::socket sb(ios_b, ZMQ_ROUTER);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
@@ -795,8 +795,8 @@ TEST_CASE("Async Operation Send/Receive with callback", "[socket_ops]") {
 }
 
 TEST_CASE("Async Operation Send/Receive with future ", "[socket_ops]") {
-    boost::asio::io_service ios_b;
-    boost::asio::io_service ios_c;
+    boost::asio::io_context ios_b;
+    boost::asio::io_context ios_c;
 
     azmq::socket sb(ios_b, ZMQ_ROUTER);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
@@ -827,7 +827,7 @@ TEST_CASE("Async Operation Send/Receive with future ", "[socket_ops]") {
 
 // If boost >= 1.80 use completion token boost::asio::use_future
 TEST_CASE("Async Operation Send/Receive with stackful coroutine", "[socket_ops]") {
-    boost::asio::io_service ios;
+    boost::asio::io_context ios;
 
     azmq::socket sb(ios, ZMQ_ROUTER);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
@@ -890,7 +890,7 @@ TEST_CASE("Async Operation Send/Receive with stackful coroutine", "[socket_ops]"
 
 // If boost >= 1.80 use completion token boost::asio::use_future
 TEST_CASE("Async Operation Send/Receive single message, stackful coroutine, one message at a time", "[socket_ops]") {
-    boost::asio::io_service ios;
+    boost::asio::io_context ios;
 
     azmq::socket sb(ios, ZMQ_ROUTER);
     sb.bind(subj(BOOST_CURRENT_FUNCTION));
@@ -948,7 +948,7 @@ TEST_CASE("Async Operation Send/Receive single message, stackful coroutine, one 
 
 
 TEST_CASE("Async Operation Send/Receive single message, check thread safety", "[socket_ops]") {
-	boost::asio::io_service ios;
+	boost::asio::io_context ios;
 #if BOOST_VERSION >= 107400
 	boost::asio::strand<boost::asio::any_io_executor> strand{ios.get_executor()};
 #else
