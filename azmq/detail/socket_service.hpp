@@ -11,7 +11,6 @@
 #include "../error.hpp"
 #include "../message.hpp"
 #include "../option.hpp"
-#include "../io_context.hpp"
 #include "../util/scope_guard.hpp"
 #include "config/mutex.hpp"
 #include "config/lock_guard.hpp"
@@ -26,15 +25,13 @@
 #include "receive_op.hpp"
 
 #include <boost/version.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/post.hpp>
 #include <boost/assert.hpp>
 #include <boost/optional.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/container/flat_map.hpp>
 #include <boost/thread/mutex.hpp>
-
-#if BOOST_VERSION >= 106600
-#include <boost/asio/post.hpp>
-#endif
 
 #include <memory>
 #include <typeindex>
@@ -220,7 +217,7 @@ namespace detail {
                                           bool optimize_single_threaded,
                                           boost::system::error_code & ec) {
             BOOST_ASSERT_MSG(impl, "impl");
-            impl->do_open(AZMQ_DETAIL_GET_IO_CONTEXT(), ctx_, type, optimize_single_threaded, ec);
+            impl->do_open(get_io_context(), ctx_, type, optimize_single_threaded, ec);
             if (ec)
                 impl.reset();
             return ec;
@@ -245,7 +242,7 @@ namespace detail {
             std::tie(it, res) = impl->exts_.emplace(std::type_index(typeid(Extension)),
                                                     socket_ext(std::forward<Extension>(ext)));
             if (res)
-                it->second.on_install(AZMQ_DETAIL_GET_IO_CONTEXT(), impl->socket_.get());
+                it->second.on_install(get_io_context(), impl->socket_.get());
             return res;
         }
 
@@ -539,11 +536,7 @@ namespace detail {
             {
                 impl->missed_events_found_ = true;
                 weak_descriptor_ptr weak_impl(impl);
-#ifdef AZMQ_DETAIL_USE_IO_SERVICE
-                impl->sd_->get_io_service().post([weak_impl, ec]() { handle_missed_events(weak_impl, ec); });
-#else
 		        boost::asio::post(impl->sd_->get_executor(), [weak_impl, ec]() { handle_missed_events(weak_impl, ec); });
-#endif
             }
         }
 
@@ -617,11 +610,7 @@ namespace detail {
                 auto evs = socket_ops::get_events(impl->socket_, ec) & impl->events_mask();
 
                 if (evs || ec) {
-#ifdef AZMQ_DETAIL_USE_IO_SERVICE
-  		    impl->sd_->get_io_service().post([handler, ec] { handler(ec, 0); });
-#else
-		    boost::asio::post(impl->sd_->get_executor(), [handler, ec] { handler(ec, 0); });
-#endif
+		            boost::asio::post(impl->sd_->get_executor(), [handler, ec] { handler(ec, 0); });
                 } else {
                     impl->sd_->async_read_some(boost::asio::null_buffers(),
                                                 std::move(handler));
@@ -671,11 +660,7 @@ namespace detail {
                     if (op->do_perform(impl->socket_)) {
                         impl->in_speculative_completion_ = true;
                         l.unlock();
-#ifdef AZMQ_DETAIL_USE_IO_SERVICE			
-                        get_io_service().post(deferred_completion(impl, std::move(op)));
-#else
                         boost::asio::post(get_io_context(), deferred_completion(impl, std::move(op)));
-#endif
                         return;
                     }
                 }

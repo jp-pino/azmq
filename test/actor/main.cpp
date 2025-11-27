@@ -52,11 +52,7 @@ TEST_CASE( "Async Send/Receive", "[actor]" ) {
                 btb = bytes_transferred;
                 io.stop();
             });
-            #ifdef AZMQ_DETAIL_USE_IO_SERVICE
-            ss.get_io_service().run();
-            #else
             ss.get_io_context().run();
-            #endif
         });
 
         s.async_send(snd_bufs, [&] (boost::system::error_code const& ec, size_t bytes_transferred) {

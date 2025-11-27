@@ -12,7 +12,7 @@
 #include "socket.hpp"
 #include "detail/actor_service.hpp"
 
-#include "io_context.hpp"
+#include <boost/asio/io_context.hpp>
 
 #include <functional>
 

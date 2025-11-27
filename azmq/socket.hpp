@@ -12,19 +12,16 @@
 #include "error.hpp"
 #include "option.hpp"
 #include "context.hpp"
-#include "io_context.hpp"
 #include "message.hpp"
 #include "detail/basic_io_object.hpp"
 #include "detail/send_op.hpp"
 #include "detail/receive_op.hpp"
 
+#include <boost/asio/io_context.hpp>
 #include <boost/asio/basic_io_object.hpp>
+#include <boost/asio/bind_executor.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/system/error_code.hpp>
-
-#if BOOST_VERSION >= 106600
-#include <boost/asio/bind_executor.hpp>
-#endif
 
 #include <type_traits>
 #include <utility>

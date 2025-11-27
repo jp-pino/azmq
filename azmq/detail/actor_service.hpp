@@ -53,7 +53,7 @@ namespace detail {
 
         template<typename T>
         socket make_pipe(bool defer_start, T&& data) {
-            return make_pipe(AZMQ_DETAIL_GET_IO_CONTEXT(), defer_start, std::forward<T>(data));
+            return make_pipe(get_io_context(), defer_start, std::forward<T>(data));
         }
 
         template<typename T>

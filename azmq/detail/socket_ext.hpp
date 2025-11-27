@@ -9,8 +9,8 @@
 #ifndef AZMQ_DETAIL_SOCKET_EXT_HPP__
 #define AZMQ_DETAIL_SOCKET_EXT_HPP__
 #include "../error.hpp"
-#include "../io_context.hpp"
 
+#include <boost/asio/io_context.hpp>
 #include <boost/assert.hpp>
 
 #include <memory>
